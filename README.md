@@ -23,21 +23,30 @@ To install and set up the project locally, follow these steps:
    ```bash
    git clone https://github.com/shivam789github/stripe-payment-processing-user-signup.git
    ```
+   
+2.Navigate to the project directory:
+```bash
+cd your-repository
+```
+3.Install dependencies:
+```bash
+gradle build
+```
 
 
 ## Usage
 
 To use this project, follow these steps:
 
-Ensure that the Stripe API keys are correctly configured in the application.properties file.
+1. Ensure that the Stripe API keys are correctly configured in the application.properties file.
 
-Start the Temporal server:
+2. Start the Temporal server:
 
 ```bash
 temporal server start-dev
 ``` 
 
-Run the application:
+3. Run the application:
 ```bash
 ./gradlew bootRun
 ```
