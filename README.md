@@ -59,6 +59,13 @@ Enter payment details securely through the Stripe integration.
 Complete the signup process.
 
 
+##Implementation Approach and Assumptions
+Implemented endpoints for user registration, retrieval of user details, and payment processing.
+Assumed that user data is stored in a PostgreSQL database.
+Utilized Stripe API for payment processing.
+Implemented a GET endpoint to retrieve all users.
+
+
 
 
 
