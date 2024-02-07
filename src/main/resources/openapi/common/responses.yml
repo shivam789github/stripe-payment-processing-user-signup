@@ -1,0 +1,32 @@
+components:
+  responses:
+    badRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas.yml#/components/schemas/error"
+    notFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas.yml#/components/schemas/error"
+    forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas.yml#/components/schemas/error"
+    unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas.yml#/components/schemas/error"
+    internalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas.yml#/components/schemas/error"

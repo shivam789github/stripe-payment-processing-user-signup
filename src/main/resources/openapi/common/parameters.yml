@@ -1,0 +1,22 @@
+components:
+  parameters:
+    pageNumber:
+      in: query
+      name: pageNumber
+      description: "Page number"
+      required: false
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+
+    pageSize:
+      in: query
+      name: pageSize
+      description: "Page size"
+      required: false
+      schema:
+        type: integer
+        default: 10
+        maximum: 100
+        minimum: 1

@@ -1,0 +1,28 @@
+openapi: 3.0.3
+info:
+  title: Midas APIs
+  version: 0.0.1
+  description: The Midas API is a RESTful API that provides access to the Midas Financial Platform.
+servers:
+  - url: https://api.midaslabs.co
+    description: Production
+  - url: https://dev.api.midaslabs.co
+    description: Development
+
+tags:
+  - name: Accounts
+    description: Create and manage user and attach payment providers such as 'stripe'.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: api_key
+
+paths:
+  /accounts:
+    $ref: "./accounts/paths/accounts.yml"
+
+security:
+  - bearerAuth: [ ]

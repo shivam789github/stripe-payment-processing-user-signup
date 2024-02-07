@@ -1,0 +1,64 @@
+components:
+  schemas:
+    createAccount:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: "User's first name"
+          example: "John"
+          required: true
+        lastName:
+          type: string
+          description: "User's last name"
+          example: "Doe"
+          required: true
+        email:
+          type: string
+          description: "Email of user"
+          example: "john@doe.com"
+          required: true
+    account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: "User's ID"
+          readOnly: true
+          example: "fba5b240-0e68-4e64-aca6-f12022dc4be3"
+        firstName:
+          type: string
+          description: "User's first name"
+          example: "John"
+        lastName:
+          type: string
+          description: "User's last name"
+          example: "Doe"
+        email:
+          type: string
+          description: "Email of user"
+          example: "john@doe.com"
+        createdAt:
+          type: string
+          format: date-time
+          description: "Prospect creation time"
+          readOnly: true
+          example: "2022-04-13T01:52:40.690387Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: "Prospect last updated time"
+          readOnly: true
+          example: "2022-04-13T01:52:40.690387Z"
+      example:
+        - id: usr_fba5b240-0e68-4e64-aca6-f12022dc4be3
+          firstName: "John"
+          lastName: "Doe"
+          creationAt: "2022-04-13T01:52:40.690387Z"
+          updatedAt: "2022-04-13T01:52:40.690387Z"
+
+    accounts:
+      type: array
+      items:
+        $ref: "#/components/schemas/account"

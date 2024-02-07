@@ -1,0 +1,43 @@
+components:
+  schemas:
+    error:
+      type: object
+      description: "Error response object"
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+    pagination:
+      type: object
+      description: "Pagination object"
+      properties:
+        count:
+          type: integer
+          description: "Total number of items"
+          example: 2
+        pageNumber:
+          type: integer
+          description: "Current page number"
+          example: 0
+        pageSize:
+          type: integer
+          description: "Page size"
+          example: 10
+        totalPages:
+          type: integer
+          description: "Total number of pages"
+          example: 1
+      required:
+        - count
+        - pageNumber
+        - pageSize
+        - totalPages

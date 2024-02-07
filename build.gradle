@@ -1,0 +1,207 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.diffplug.spotless' version '6.21.0'
+    id 'se.solrike.sonarlint' version '2.0.0'
+
+    id 'org.openapi.generator' version '7.1.0'
+}
+
+group = 'com.midas'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    sonarlintPlugins 'org.sonarsource.java:sonar-java-plugin:7.30.1.34514'
+
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
+
+    implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+    implementation 'io.temporal:temporal-spring-boot-starter-alpha:1.22.3'
+
+
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'io.gsonfire:gson-fire:1.9.0'
+
+    implementation "com.stripe:stripe-java:24.14.0"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+task customJar(type: Jar) {
+
+    manifest {
+        attributes 'Main-Class': 'com.midas.app.MidasApplication'
+    }
+
+
+    from sourceSets.main.output
+
+
+}
+
+
+tasks.customJar.dependsOn(tasks.compileJava, tasks.processResources)
+
+
+build.dependsOn(tasks.customJar)
+
+
+artifacts {
+    archives customJar
+}
+
+tasks.register('sonarlintListRules', SonarlintListRules) {
+    description = 'List sonarlint rules'
+    group = 'verification'
+}
+
+sonarlintMain {
+    source = fileTree("$buildDir/src/main")
+    reports {
+        html {
+            enabled = true
+            outputLocation = file("$buildDir/reports/sonarlint")
+        }
+        xml.enabled = true
+        sarif.enabled = false
+    }
+}
+
+
+sonarlint {
+    // excludeRules = ['java:S1186']
+    // includeRules = ['java:S1176', 'java:S1696', 'java:S4266']
+    ignoreFailures = false
+    maxIssues = 0 // default 0
+    // note that rule parameter names are case sensitive
+    // ruleParameters = [
+    //   'java:S1176' : [
+    //     'forClasses':'**.api.**',      // need javadoc for public methods in package matching 'api'
+    //     'exclusion': '**.private.**'] // do not need javadoc for classes under 'private'. Default is **.internal.**
+    // ]
+    showIssues = true // default true
+}
+
+
+// Spotless Formatter Configuration
+spotless {
+    format "misc", {
+        // define the files to apply `misc` to
+        target "*.gradle", "*.md", ".gitignore"
+
+        // define the steps to apply to those files
+        trimTrailingWhitespace()
+        indentWithSpaces(2) // or spaces. Takes an integer argument if you don't like 4
+        endWithNewline()
+    }
+
+    java {
+        // Use the default importOrder configuration
+        importOrder("java|javax", "", "$group", "\\#$group", "\\#")
+
+        // Remove unused imports
+        //removeUnusedImports()
+
+        // Cleanthat will refactor your code, but it may break your style: apply it before your formatter
+        cleanthat()
+                .version("2.17")
+
+        // Coding Style
+        // Read more at https://google.github.io/styleguide/javaguide.html
+        googleJavaFormat()
+
+        // fixes formatting of type annotations
+        formatAnnotations()
+
+        targetExclude("**/generated/**")
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java', 'workflows', "$buildDir/generated/openapi/src/main/java"
+        }
+    }
+}
+
+
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import se.solrike.sonarlint.SonarlintListRules
+
+tasks.register('_generateInternalOpenApi', GenerateTask) {
+    outputs.upToDateWhen {
+        false
+    }
+    cleanupOutput = true
+
+    generatorName.set("spring")
+
+    inputSpec.set("${rootDir}/src/main/resources/openapi/api.yml")
+    outputDir.set("${buildDir}/generated/openapi")
+
+
+    apiPackage.set("${rootProject.group}.generated.api")
+    apiNameSuffix.set("Api")
+    modelPackage.set("${rootProject.group}.generated.model")
+    modelNameSuffix.set("Dto")
+
+    configOptions.set([
+            library          : 'spring-boot',
+            interfaceOnly    : 'true',
+            useBeanValidation: 'true',
+            openApiNullable  : 'false',
+            useSpringBoot3   : 'true',
+            useJakartaEe     : 'true',
+    ])
+}
+
+tasks.register('generateOpenApiSpecs') {
+    dependsOn([
+            tasks._generateInternalOpenApi,
+    ])
+}
+
+tasks {
+    compileJava {
+        dependsOn spotlessApply
+        dependsOn tasks.generateOpenApiSpecs
+    }
+}
