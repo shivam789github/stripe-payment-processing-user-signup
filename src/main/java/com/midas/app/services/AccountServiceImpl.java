@@ -21,12 +21,7 @@ public class AccountServiceImpl implements AccountService {
   // JPA repository
   private final AccountRepository accountRepository;
 
-  /**
-   * createAccount creates a new account in the system or provider.
-   *
-   * @param details is the details of the account to be created.
-   * @return Account
-   */
+
   @Override
   public Account createAccount(Account details) {
     var options =
@@ -42,11 +37,7 @@ public class AccountServiceImpl implements AccountService {
     return workflow.createAccount(details);
   }
 
-  /*   *
-   * getAccounts returns a list of accounts.
-   *
-   * @return List<Account>
-   */
+ 
   @Override
   public List<Account> getAccounts() {
     return accountRepository.findAll();
