@@ -11,6 +11,7 @@ This project provides a seamless integration of the Stripe payment processing se
 2. [Usage](#usage)
 3. [Configuration](#configuration)
 4. [Examples](#examples)
+5. [Implementation Approach and Assumptions](#Implementation Approach and Assumptions)
 
 
 ## Installation
