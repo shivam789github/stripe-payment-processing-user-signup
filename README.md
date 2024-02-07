@@ -21,7 +21,7 @@ To install and set up the project locally, follow these steps:
 1. Clone the repository from GitHub:
 
    ```bash
-   git clone https://github.com/yourusername/your-repository.git
+   git clone https://github.com/shivam789github/stripe-payment-processing-user-signup.git
    ```
 
 
